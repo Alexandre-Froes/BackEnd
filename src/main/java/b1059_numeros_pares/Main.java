@@ -1,3 +1,5 @@
+package b1059_numeros_pares;
+
 import java.util.*;
 
 public class Main
