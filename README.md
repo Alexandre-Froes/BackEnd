@@ -14,6 +14,11 @@ ___
 
 > No conteúdo de lógica da programação é possível encontrar os códigos resolvidos pelo BeeCrowd, Neps Academy e aquelas desenvolvidas pelo professor da disciplina, Bruno Queiroz Pinto. Além de provas e o projeto final da disciplina.
 
+### Projeto Web MVC e SQL 
+___
+
+> Na pasta projeto-mvc-sql estão localizados os projetos desenvolvidos na disciplina de Projeto MVC e SQL, ministrada pelo professor Carlos Eduardo.
+
 ### Algorítimos e Programação
 ___
 
@@ -21,6 +26,7 @@ ___
 
 ### Programação Orientada em Objetos 1
 ___
+
 > *ainda a ser desenvolvido*
 
 *Os códigos foram desenvolvidos e resolvidos por mim, Alexandre Silva Froes*
