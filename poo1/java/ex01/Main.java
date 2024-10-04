@@ -29,12 +29,14 @@ public class Main {
 
         System.out.printf("Jogador '%s' é a sua vez de jogar!%n", jogador);
 
-        do {
+        posicao = ler.nextInt();
+
+        while(posicao < 1 || posicao > 9) {
+            restricao();
+
             System.out.printf("Escolha uma posição: ");
             posicao = ler.nextInt();
-
-            System.out.println("");
-        } while(posicao < 1 || posicao > 9);
+        }
 
         return posicao;
     }
@@ -131,7 +133,7 @@ public class Main {
         preencherMapas();
 
         do {
-            jogador = jogAtual ? 'X' : 'O';
+            jogador = jogAtual ? 'O' : 'X';
             jogAtual = !jogAtual;
     
             do {
