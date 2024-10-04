@@ -32,6 +32,8 @@ public class Main {
         do {
             System.out.printf("Escolha uma posição: ");
             posicao = ler.nextInt();
+
+            System.out.println("");
         } while(posicao < 1 || posicao > 9);
 
         return posicao;
