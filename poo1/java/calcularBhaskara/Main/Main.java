@@ -41,7 +41,7 @@ public class Main {
         EGrau2 Bhask = new EGrau2(a, b, c);
         double d = Bhask.delta();
 
-        if(d < 0) {
+        if(d <= 0) {
             System.out.println("Não existem raízes reais");
         } else {
             double x1 = Bhask.calculaX1(d);
