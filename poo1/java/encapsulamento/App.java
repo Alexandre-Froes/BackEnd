@@ -11,7 +11,7 @@ public class App {
         pessoa.setNome(ler.nextLine());
 
         System.out.println("Digite o sexo da pessoa:");
-        pessoa.setSexo(ler.next().charAt(0)); ;
+        pessoa.setSexo(ler.next().charAt(0));
         ler.nextLine();
 
         System.out.println("Digite o idade da pessoa:");
@@ -38,27 +38,27 @@ public class App {
         formacao.setInstituto(ler.nextLine());
 
         System.out.println("Digite o ano de formação:");
-        formacao.ano = ler.nextInt();
+        formacao.setAno(ler.nextInt());
         ler.nextLine();
 
         return formacao;
     }
     public static String exibePessoa(Pessoa p){
-        return "Nome: " + p.nome + "\n" +
-               "Sexo: " + p.sexo + "\n" + 
-               "Idade: " + p.idade + "\n";
+        return "Nome: " + p.getNome() + "\n" +
+               "Sexo: " + p.getSexo() + "\n" + 
+               "Idade: " + p.getIdade() + "\n";
     }
     public static String exibeFormacao(Formacao f){
         String concluido;
-        if (f.concluido) {
+        if (f.isConcluido()) {
             concluido = "Formado";
         } else {
             concluido = "Não concluido";
         }
-        return "Nível: " + f.nivel + "\n" +
+        return "Nível: " + f.getNivel() + "\n" +
                "Estado da conclusão: " + concluido + "\n" + 
-               "Instituto: " + f.instituto + "\n" +
-               "Ano da formação: " + f.ano + "\n";
+               "Instituto: " + f.getInstituto() + "\n" +
+               "Ano da formação: " + f.getAno() + "\n";
     }
     public static int exibirMenu(){
         Scanner ler = new Scanner(System.in);
@@ -96,8 +96,8 @@ public class App {
                     break;      
 
                 case 4:
-                    System.out.println("Digite uma nova idade para" + p.nome + ":");
-                    p.idade = ler.nextInt();
+                    System.out.println("Digite uma nova idade para" + p.getNome() + ":");
+                    p.setIdade(ler.nextInt());
                     break;    
             
                 case 5:
