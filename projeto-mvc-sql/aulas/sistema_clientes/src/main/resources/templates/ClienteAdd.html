@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<h1>Adicionar Novo Cliente</hl>
+    <form action="/add" method="post" th:object="${cliente}"></form>
+        <label>Código:</label>
+        <input type="text" th:field="*{codigo}" required><br><br>
+
+        <label>Nome:</label>
+        <input type="text" th:field="*{nome}" required><br><br>
+
+        <label>Endereço: </label>
+        <input type="text" th:field="*{endereco}" required><br><br>
+
+        <button >Adicionar Cliente</button>
+    </form>
+    <a href="/clientes">Voltar para Lista de Clientes</a>
+</html>
