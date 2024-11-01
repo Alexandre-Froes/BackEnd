@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualização dos clientes</title>
+</head>
+<body>
+    <h1>Meus clientes</h1>
+    <a href="/add">Adicionar cliente</a>
+    <ul>
+        <li th:each="cliente : ${clientes}">
+            <span th:text="${cliente.codigo}">CODIGO</span>
+            <span th:text="${cliente.nome}">NOME</span>
+            <span th:text="${cliente.endereco}">ENDEREÇO</span>
+        </li>
+    </ul>
+</body>
+</html>
