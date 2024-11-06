@@ -54,9 +54,9 @@ public class App {
         }
     
         if (idade >= idadeAposentadoria) {
-            System.out.println("Você pode se aposentar!");
+            System.out.println("Jogador " + jogador.getNome() + "você pode se aposentar!");
         } else {
-            System.out.printf("Você ainda não pode se aposentar! Faltam %d ano(s).\n", idadeAposentadoria - idade);
+            System.out.printf("Jogador %s você ainda não pode se aposentar! Faltam %d ano(s).\n",jogador.getNome(), idadeAposentadoria - idade);
         }
     }
         
