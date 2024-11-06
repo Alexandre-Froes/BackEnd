@@ -6,6 +6,9 @@ public class App {
     public static JogadorDeFutebol leDados() {
         Scanner ler = new Scanner(System.in);
         JogadorDeFutebol jogador = new JogadorDeFutebol();
+        
+        System.out.println("Digite o nome do jogador:");
+        jogador.setNome(ler.nextLine());
     
         System.out.println("Digite a nacionalidade do jogador:");
         jogador.nacionalidade = ler.nextLine();
