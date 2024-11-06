@@ -5,6 +5,10 @@ public class Pessoa {
     private char sexo;
     private int idade;
 
+    public void Pessoa() {
+
+    }
+
     public void Pessoa(String nome, char sexo, int idade){
         this.nome = nome;
         this.sexo = sexo;

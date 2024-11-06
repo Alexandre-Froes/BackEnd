@@ -6,6 +6,10 @@ public class Formacao {
     private String instituto;
     private int ano;
 
+    public void Formacao() {
+
+    }
+
     public void Formacao(String nivel, boolean concluido, String instituto, int ano) {
         this.nivel = nivel;
         this.concluido = concluido;

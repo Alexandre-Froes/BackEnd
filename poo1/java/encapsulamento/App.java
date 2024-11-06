@@ -16,6 +16,8 @@ public class App {
 
         System.out.println("Digite o idade da pessoa:");
         pessoa.setIdade(ler.nextInt());
+        
+        ler.close();
 
         return pessoa;
     }
@@ -41,12 +43,14 @@ public class App {
         formacao.setAno(ler.nextInt());
         ler.nextLine();
 
+        ler.close();
+
         return formacao;
     }
     public static String exibePessoa(Pessoa p){
         return "Nome: " + p.getNome() + "\n" +
-               "Sexo: " + p.getSexo() + "\n" + 
-               "Idade: " + p.getIdade() + "\n";
+                "Sexo: " + p.getSexo() + "\n" + 
+                "Idade: " + p.getIdade() + "\n";
     }
     public static String exibeFormacao(Formacao f){
         String concluido;
@@ -56,9 +60,9 @@ public class App {
             concluido = "Não concluido";
         }
         return "Nível: " + f.getNivel() + "\n" +
-               "Estado da conclusão: " + concluido + "\n" + 
-               "Instituto: " + f.getInstituto() + "\n" +
-               "Ano da formação: " + f.getAno() + "\n";
+                "Estado da conclusão: " + concluido + "\n" + 
+                "Instituto: " + f.getInstituto() + "\n" +
+                "Ano da formação: " + f.getAno() + "\n";
     }
     public static int exibirMenu(){
         Scanner ler = new Scanner(System.in);
@@ -68,6 +72,8 @@ public class App {
         System.out.println("3 - Exibir informações");
         System.out.println("4 - Editar idade");
         System.out.println("5 - Sair");
+
+        ler.close();
         
         return ler.nextInt();
     }
