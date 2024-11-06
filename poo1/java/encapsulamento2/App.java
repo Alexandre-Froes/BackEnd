@@ -81,6 +81,5 @@ public class App {
         System.out.println(exibe(jogador));
 
         tempoAposentadoria(jogador);
-
     }
 }
