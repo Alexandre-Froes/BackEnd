@@ -12,7 +12,8 @@ public class Main {
             String b = ler.next();
 
             for(int j = (a.length() - b.length()); j < a.length(); j++) {
-                if(a.length() < b.length() || a.charAt(j) != b.charAt(j - (a.length() - b.length()))) {
+                if(a.length() < b.length() || 
+                   a.charAt(j) != b.charAt(j - (a.length() - b.length()))) {
                     System.out.println("nao encaixa");
                     break;
                 } else if(j == a.length() - 1) {
