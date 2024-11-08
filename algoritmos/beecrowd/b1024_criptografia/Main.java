@@ -1,3 +1,5 @@
+package BackEnd.algoritmos.beecrowd.b1024_criptografia;
+
 import java.util.Scanner;
 
 public class Main {

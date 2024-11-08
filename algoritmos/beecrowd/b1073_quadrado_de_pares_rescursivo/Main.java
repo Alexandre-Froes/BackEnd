@@ -1,4 +1,4 @@
-package b1073_quadrado_de_pares_recursivo;
+package BackEnd.algoritmos.beecrowd.b1073_quadrado_de_pares_rescursivo;
 
 import java.util.Scanner;
 
