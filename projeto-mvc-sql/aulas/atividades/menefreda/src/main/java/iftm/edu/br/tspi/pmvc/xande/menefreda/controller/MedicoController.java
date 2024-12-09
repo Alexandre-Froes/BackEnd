@@ -64,7 +64,7 @@ public class MedicoController {
 
     @GetMapping("/editar/{codigo}")
     public String abrirFormEditarMedico(@PathVariable("codigo") int codigo, Model model, RedirectAttributes redirectAttributes) {
-        Medico medicoBusca = repository.buscaPorCodigo(codigo - 1);
+        Medico medicoBusca = repository.buscaPorCodigo(codigo);
         if (medicoBusca == null) {
             redirectAttributes.addFlashAttribute(ATRIBUTO_MENSAGEM, "Médico com código " + codigo + " não encontrado");
             return URL_FORM_LISTA;

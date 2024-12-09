@@ -30,7 +30,7 @@
                     <input type="text" th:field="*{numero}" id="txtNumero" placeholder="Digite o número de telefone" required>
                 </div>
 
-                <button type="submit" th:text="${medico.codigo != null ? 'Atualizar' : 'Salvar'}" class="btn btnSalvar">Salvar</button>
+                <button type="submit" th:text="${medico.nome != null ? 'Atualizar' : 'Salvar'}" class="btn btnSalvar">Salvar</button>
             </form>
 
             <a th:href="@{/medico}" class="btn">Voltar à lista de médicos</a>
