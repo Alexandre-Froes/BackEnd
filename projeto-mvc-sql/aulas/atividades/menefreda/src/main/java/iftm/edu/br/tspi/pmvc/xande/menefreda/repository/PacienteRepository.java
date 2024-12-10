@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import iftm.edu.br.tspi.pmvc.xande.menefreda.domain.Medico;
 import iftm.edu.br.tspi.pmvc.xande.menefreda.domain.Paciente;
 
 @Component
@@ -14,8 +13,8 @@ public class PacienteRepository {
 
     public PacienteRepository() {
         // Adicionando dois pacientes cadastrados
-        pacientes.add(new Paciente("12345678901", "João Silva", "Masculino", "joao.silva@example.com", "Rua A, 123", "123456789", "01/01/1980"));
-        pacientes.add(new Paciente("98765432100", "Maria Oliveira", "Feminino", "maria.oliveira@example.com", "Rua B, 456", "987654321", "02/02/1990"));
+        pacientes.add(new Paciente("12345678901", "João Silva", "Masculino", "joao.silva@example.com", "Rua A, 123", "123456789", "1980-01-01"));
+        pacientes.add(new Paciente("98765432100", "Maria Oliveira", "Feminino", "maria.oliveira@example.com", "Rua B, 456", "987654321", "1990-02-02"));
     }
 
     public List<Paciente> listarPacientes() {

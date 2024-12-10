@@ -10,11 +10,11 @@ import iftm.edu.br.tspi.pmvc.xande.menefreda.domain.Plano;
 @Component
 public class PlanoRepository {
     private final List<Plano> planos;
-
+    
     public PlanoRepository() {
         this.planos = new ArrayList<>();
-        this.planos.add(new Plano(1, 100.00, "2024-12-31", "Bronze"));
-        this.planos.add(new Plano(2, 200.00, "2024-12-31", "Prata"));
+        this.planos.add(new Plano(1, 100.00, "Bronze"));
+        this.planos.add(new Plano(2, 200.00, "Prata"));
     }
 
     public List<Plano> listarPlanos() {
@@ -22,19 +22,19 @@ public class PlanoRepository {
     }
 
     public List<Plano> buscarPorTipo(String tipo) {
-        List<Plano> planosFiltrados = new ArrayList<>();
+        List<Plano> buscaPlanos = new ArrayList<>();
         for (Plano plano : this.planos) {
             if (plano.getTipo().equalsIgnoreCase(tipo)) {
-                planosFiltrados.add(plano);
+                buscaPlanos.add(plano);
             }
         }
-        return planosFiltrados;
+        return buscaPlanos;
     }
 
     public Plano buscaPorCodigo(int codigo) {
-        for (Plano plano : planos) {
-            if (plano.getCodigo() == codigo) {
-                return plano;
+        for (Plano medico : planos) {
+            if (medico.getCodigo() == codigo) {
+                return medico;
             }
         }
         return null;
