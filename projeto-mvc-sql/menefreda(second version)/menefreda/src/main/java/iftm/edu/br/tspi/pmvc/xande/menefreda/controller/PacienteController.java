@@ -6,8 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import iftm.edu.br.tspi.pmvc.xande.menefreda.domain.Paciente;
 import iftm.edu.br.tspi.pmvc.xande.menefreda.repository.PacienteRepository;
+import iftm.edu.br.tspi.pmvc.xande.menefreda.domain.Paciente;   
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequestMapping("/pacientes")
 public class PacienteController {
     
-    private final PacienteRepository pacienteRepository;
+    private PacienteRepository pacienteRepository;
 
     public static final String URL_LISTA = "pacientes/listaPaciente";
     public static final String URL_FORM = "pacientes/formPaciente";
@@ -33,7 +34,7 @@ public class PacienteController {
         this.pacienteRepository = pacienteRepository;
     }
 
-    @GetMapping("/listar")
+    @GetMapping("")
     public String listar(Model model) {
         List<Paciente> pacientes = pacienteRepository.listar();
         model.addAttribute(ATRIBUTO_LISTA, pacientes);
@@ -56,7 +57,7 @@ public class PacienteController {
         return listar(model);
     }
 
-    @GetMapping("/excluir/{cpf}")
+    @PostMapping("/excluir/{cpf}")
     public String excluir(@PathVariable("cpf") String cpf, Model model) {
         pacienteRepository.excluir(cpf);
         model.addAttribute(ATRIBUTO_MENSAGEM, "Paciente excluído com sucesso");
