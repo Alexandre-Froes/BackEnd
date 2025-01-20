@@ -1,4 +1,4 @@
-package BackEnd.algoritmos.beecrowd.b1241_encaixa_ou_nao;
+package b1241_encaixa_ou_nao;
 
 import java.util.Scanner;
 
