@@ -46,7 +46,7 @@ public class PlanoController {
 
     @PostMapping("/novo")
     public String salvar(@ModelAttribute Plano plano, Model model) {
-        if (plano.getCodigo() == null) {
+        if (plano.getCodigo() != null) {
             planoRepository.salvar(plano);
         } else {
             planoRepository.atualizar(plano);

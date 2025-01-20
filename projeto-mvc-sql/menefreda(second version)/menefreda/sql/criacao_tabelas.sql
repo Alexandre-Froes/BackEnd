@@ -7,7 +7,7 @@ nome_paci varchar(50),
 genero_paci char(1),
 email_paci varchar(100),
 dt_nasc_paci date,
-end_paci varchar(50),
+end_paci varchar(200),
 tel_paci varchar(11)
 );
 
@@ -64,12 +64,3 @@ values
 (8, '89012345678', 3, '2024-08-12', '2025-08-12', 250.00),   -- Juliana Rocha contrata Plano Família
 (9, '90123456789', 4, '2024-09-15', '2025-09-15', 190.00),   -- Gustavo Almeida contrata Plano Infantil
 (10, '01234567890', 3, '2024-10-01', '2025-10-01', 100.00);  -- Patrícia Ferreira contrata Plano Odontológico
-
-                    select cod_cont
-                        dt_inicio,
-                        validade,
-                        valor,
-                        pa.cpf_paci,
-                        pl.cod_plano
-                    from contrata c join paciente pa on c.cpf_paci = pa.cpf_paci 
-                    join plano pl on c.cod_plano = pl.cod_plano

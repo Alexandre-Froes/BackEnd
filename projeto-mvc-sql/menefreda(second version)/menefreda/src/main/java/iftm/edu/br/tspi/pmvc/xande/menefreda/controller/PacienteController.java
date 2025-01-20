@@ -48,7 +48,7 @@ public class PacienteController {
     }
     @PostMapping("/novo")
     public String salvar(@ModelAttribute Paciente paciente, Model model) {
-        if(paciente.getCpf() == null) {
+        if(paciente.getCpf() != null) {
             pacienteRepository.salvar(paciente);
         } else {
             pacienteRepository.atualizar(paciente);
