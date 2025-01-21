@@ -24,7 +24,7 @@ area_atua varchar(30),
 tel_med varchar(11)
 );
 
-create table contrata (
+create table contrato (
 cod_cont int primary key auto_increment,
 cpf_paci char(11),
 cod_plano int,
@@ -52,7 +52,7 @@ values
 ('90123456789', 'Gustavo Almeida', 'M', 'gustavo.almeida@email.com', '1998-10-03', 'Rua I, 2021', '11898765432'),
 ('01234567890', 'Patrícia Ferreira', 'F', 'patricia.ferreira@email.com', '1993-06-21', 'Rua J, 2223', '11887654321');
 
-insert into contrata (cod_cont, cpf_paci, cod_plano, dt_inicio, validade, valor)
+insert into contrato (cod_cont, cpf_paci, cod_plano, dt_inicio, validade, valor)
 values
 (1, '12345678901', 2, '2024-01-01', '2025-01-01', 350.00),  -- Carlos Silva contrata Plano Premium
 (2, '23456789012', 1, '2024-02-15', '2025-02-15', 150.00),  -- Maria Oliveira contrata Plano Básico
@@ -64,3 +64,12 @@ values
 (8, '89012345678', 3, '2024-08-12', '2025-08-12', 250.00),   -- Juliana Rocha contrata Plano Família
 (9, '90123456789', 4, '2024-09-15', '2025-09-15', 190.00),   -- Gustavo Almeida contrata Plano Infantil
 (10, '01234567890', 3, '2024-10-01', '2025-10-01', 100.00);  -- Patrícia Ferreira contrata Plano Odontológico
+
+insert into contrato(
+    cod_cont,
+    dt_inicio,
+    validade,
+    valor,
+    cpf_paci,
+    tipo_plano)
+values(20, '2024-01-01', '2024-01-01', 20.00, 12312312312, 'gold');

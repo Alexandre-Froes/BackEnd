@@ -8,6 +8,7 @@
     <script src="https://kit.fontawesome.com/1c8722ade6.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <header th:insert="~{fragments/menu :: menu}"></header>
     <section class="crudContainer">
         <div class="container">
             <form th:action="@{${'/planos/novo'}}" th:object="${plano}" method="post">

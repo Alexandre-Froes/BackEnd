@@ -8,9 +8,10 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+    <header th:insert="~{fragments/menu :: menu}"></header>
     <section class="crudContainer">
         <div class="container">
-            <h1>Pacientes cadastrados</h1>
+            <h1>Contratos de pacientes</h1>
             <div th:if="${mensagem}" class="msgContainer">
                 <p th:text="${mensagem}"></p>
             </div>
@@ -56,7 +57,7 @@
                         <tr>
                             <td>
                                 <a th:href="@{/contratos/novo}" class="btn"><i class="fa-solid fa-plus btn icone"></i></a>
-                            </td>   
+                            </td>
                         </tr>
                     </tbody>
                 </table>

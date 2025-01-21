@@ -52,4 +52,102 @@ public class ContratoRepository {
                     """;
         return conexao.query(sql, (rs, rowNum) -> setContrato(rs));
     }
+
+    public List<Contrato> buscaPorNome(String nome) {
+        String sql = """
+                        select cod_cont,
+                            dt_inicio,
+                            validade,
+                            valor,
+                            pa.cpf_paci,
+                            pa.nome_paci,
+                            pl.tipo_plano
+                        from contrata c, paciente pa, plano pl
+                        where c.cpf_paci = pa.cpf_paci
+                        and c.cod_plano = pl.cod_plano
+                        and pa.nome_paci like ?
+                    """;
+        return conexao.query(sql, (rs, rowNum) -> setContrato(rs),
+        "%"+nome.toLowerCase()+"%");
+        }
+
+    public Contrato buscaPorCodigo(Integer codigo) {
+        String sql = """
+                    select cod_cont,
+                        dt_inicio,
+                        validade,
+                        valor,
+                        pa.cpf_paci,
+                        pa.nome_paci,
+                        pl.tipo_plano
+                        from contrata c, paciente pa, plano pl
+                        where c.cpf_paci = pa.cpf_paci
+                        and c.cod_plano = pl.cod_plano
+                        and cod_cont = ?
+                    """;
+        return conexao.queryForObject(sql, (rs, rowNum) -> setContrato(rs),
+        codigo);
+    }
+
+    public Contrato buscaPorCpf(String cpf) {
+        String sql = """
+                    select cod_cont,
+                        dt_inicio,
+                        validade,
+                        valor,
+                        pa.cpf_paci,
+                        pa.nome_paci,
+                        pl.tipo_plano
+                    from contrata c, paciente pa, plano pl
+                    where c.cpf_paci = pa.cpf_paci
+                    and c.cod_plano = pl.cod_plano
+                    and c.cpf_paci like ?
+                    """;
+        return conexao.queryForObject(sql,
+        (rs, rowNum) -> setContrato(rs), cpf);
+    }
+
+    public void salvar(Contrato contrato) {
+        String sql = """
+                    insert into contrato(
+                        cod_cont,
+                        dt_inicio,
+                        validade,
+                        valor,
+                        cpf_paci)
+                    values(?, ?, ?, ?, ?)
+                    """;
+            conexao.update(sql,
+                                contrato.getCodigo(),
+                                contrato.getDataContratacao(),
+                                contrato.getDataValidade(),
+                                contrato.getValor(),
+                                contrato.getPaciente().getCpf());
+    }
+
+    public void atualizar(Contrato contrato) {
+        String sql = """
+                    update contrato
+                    set dt_inicio = ?,
+                        validade = ?,
+                        valor = ?,
+                        cpf_paci = ?,
+                        nome_paci = (select nome_paci
+                                    from Paciente
+                                    where nome = cpf_paci),
+                        tipo_plano = ?
+                    where cod_paci = ?
+                    """;
+        conexao.update(sql, contrato.getDataContratacao(),
+                            contrato.getDataValidade(),
+                            contrato.getValor(),
+                            contrato.getPaciente().getCpf(),
+                            contrato.getPlano().getTipo(),
+                            contrato.getCodigo());
+    }
+
+    public void excluir(Integer codigo) {
+        String sql = "delete from paciente where cod_cont = ?";
+        conexao.update(sql, codigo);
+    }
 }
