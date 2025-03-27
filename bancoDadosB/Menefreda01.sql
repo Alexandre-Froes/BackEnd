@@ -5,10 +5,12 @@ use menefreda;
 create table plano (
 	cod_plano int primary key auto_increment,
     tipo_plano varchar(255),
-    valor_plano numeric(10,2)
+    valor_plano numeric(10,2),
+    valor_dep numeric(10,2)
 );
 
 create table paciente (
+	cod_paci int unique auto_increment,
 	cpf_paci char(11) primary key,
     genero_paci char(1),
     email_paci varchar(255),
@@ -17,10 +19,11 @@ create table paciente (
     end_paci varchar(255),
     tel_paci varchar(255),
     cod_plano int,
-    foreign key(cod_plano) references plano(cod_plano)
+	foreign key(cod_plano) references plano(cod_plano)
 );
 
 create table dependente (
+	cod_dep int unique auto_increment,
 	cpf_dep char(11) primary key,
     cpf_paci char(11),
     tel_emergencia varchar(255),
@@ -32,14 +35,14 @@ create table dependente (
 );
 
 create table medico (
-	cod_medico int primary key auto_increment,
+	cod_medico int primary key auto_increment not null,
     nome_medico varchar (255),
     area_atuacao varchar(255),
     tel_medico varchar (255)
 );
 
 create table contrato (
-	cod_cont int primary key auto_increment,
+	cod_cont int primary key auto_increment not null,
 	cpf_paci char(11),
 	cod_plano int,
 	dt_inicio date,
@@ -87,12 +90,11 @@ create table planoProcedimento (
     status_proc varchar(255)
 ); 
 
-INSERT INTO plano (tipo_plano, valor_plano) VALUES
-('Básico', 90.00),
-('Premium', 150.00),
-('Família', 200.00),
-('Empresarial', 1200.00),
-('Saúde Total', 300.00);
+INSERT INTO plano (tipo_plano, valor_plano, valor_dep) VALUES
+('Bronze', 90.00, 27.00),
+('Prata', 150.00, 45.00),
+('Gold', 180.00, 54.00),
+('Diamante', 200.00, 60.00);
 
 insert into paciente (cpf_paci, nome_paci, genero_paci, email_paci, dt_nasc_paci, end_paci, tel_paci, cod_plano) 
 values
@@ -100,19 +102,19 @@ values
 ('23456789012', 'Maria Oliveira', 'F', 'maria.oliveira@email.com', '1990-07-22', 'Rua B, 456', '12976543210', 2),
 ('34567890123', 'José Pereira', 'M', 'jose.pereira@email.com', '1982-03-10', 'Rua C, 789', '34965432109', 3),
 ('45678901234', 'Ana Costa', 'F', 'ana.costa@email.com', '1995-11-05', 'Rua D, 1011', '34954321098', 4),
-('56789012345', 'Lucas Martins', 'M', 'lucas.martins@email.com', '1992-12-30', 'Rua E, 1213', '33943210987', 5),
+('56789012345', 'Lucas Martins', 'M', 'lucas.martins@email.com', '1992-12-30', 'Rua E, 1213', '33943210987', 4),
 ('67890123456', 'Fernanda Lima', 'F', 'fernanda.lima@email.com', '1988-02-17', 'Rua F, 1415', '32932109876', 1),
 ('78901234567', 'Ricardo Souza', 'M', 'ricardo.souza@email.com', '1980-09-25', 'Rua G, 1617', '30921098765', 2),
 ('89012345678', 'Juliana Rocha', 'F', 'juliana.rocha@email.com', '2000-05-11', 'Rua H, 1819', '10910987654', 3),
 ('90123456789', 'Gustavo Almeida', 'M', 'gustavo.almeida@email.com', '1998-10-03', 'Rua I, 2021', '11898765432', 4),
-('01234567890', 'Patrícia Ferreira', 'F', 'patricia.ferreira@email.com', '1993-06-21', 'Rua J, 2223', '11887654321', 5);
+('01234567890', 'Patrícia Ferreira', 'F', 'patricia.ferreira@email.com', '1993-06-21', 'Rua J, 2223', '11887654321', 4);
 
 INSERT INTO dependente (cpf_dep, cpf_paci, tel_emergencia, genero_dep, nm_dep, dt_nasc_dep, parentesco) VALUES
-('11223344551', '12345678901', '1199999-1111', 'F', 'Sophia Silva', '2015-03-15', 'Filha'),
-('22334455662', '23456789012', '1198888-2222', 'M', 'Lucas Pereira', '2018-07-20', 'Filho'),
-('33445566773', '34567890123', '1197777-3333', 'F', 'Laura Costa', '2020-01-10', 'Filha'),
-('44556677884', '45678901234', '1196666-4444', 'M', 'Enzo Santos', '2012-12-05', 'Filho'),
-('55667788995', '56789012345', '1195555-5555', 'F', 'Valentina Oliveira', '2022-05-18', 'Filha');
+('11223344551', '12345678901', '1199999-1111', 'F', 'Sophia Silva', '2015-03-15', 'Pai'),
+('22334455662', '23456789012', '1198888-2222', 'M', 'Lucas Pereira', '2018-07-20', 'Mae'),
+('33445566773', '34567890123', '1197777-3333', 'F', 'Laura Costa', '2020-01-10', 'Pai'),
+('44556677884', '45678901234', '1196666-4444', 'M', 'Enzo Santos', '2012-12-05', 'Mae'),
+('55667788995', '56789012345', '1195555-5555', 'F', 'Valentina Oliveira', '2022-05-18', 'Pai');
 
 insert into contrato (cod_cont, cpf_paci, cod_plano, dt_inicio, validade, valor)
 values
@@ -179,80 +181,14 @@ INSERT INTO planoProcedimento (cod_proc, cod_plano, local_proc, status_proc) VAL
 (4, 4, 'Hospital Cura', 'Agendado'),
 (5, 5, 'Hospital Municipal', 'Realizado');
 
--- 4) Criar relatórios sobre os dados usando o comando SELECT, com
--- operadores (=,<,>,>=,<=, IN, BETWEEN, LIKE). Deve ser realizado ao
--- menos 2 relatórios por participante.
-
--- Matheus
--- cpf, nome dos pacientes homens
-select cpf_paci, nome_paci
-from paciente
-where genero_paci = 'M';
-
--- nome do medico e área de atuacao das medicas de nome ana
-select nome_medico, area_atuacao
-from medico
-where nome_medico like "%Ana%";
-
--- Alexandre
--- Contratos que foram feitos apenas depois do mês 6 e no ano de 2024
-Select *
-from contrato
-where month(dt_inicio) > 6 and year(dt_inicio) = 2024; 
-
--- Selectionar os pacientes que tenham telefone começando com 34
-select *
-from paciente
-where tel_paci like '34%';
-
--- 5) Criar relatórios sobre os dados usando o comando SELECT e junção de
--- tabelas. Deve ser realizado ao menos 2 relatórios por participante.
-
--- Matheus
--- nome do paciente, nome do dependente e o parentesco entre eles
-select p.nome_paci, d.nm_dep, d.parentesco
-from paciente p join dependente d on p.cpf_paci = d.cpf_paci;
-
--- o nome e o plano dos pacientes que possuem o plano básico
-select pa.nome_paci, pl.tipo_plano
-from paciente pa join plano pl on pa.cod_plano = pl.cod_plano
-where pl.tipo_plano = "basico";
-
--- Alexandre
--- selecionar o nome do pacientes que tenham um contrato com o valor maior de 200 reais
-select pa.nome_paci, pa.cpf_paci
-from paciente pa join contrato c 
-on pa.cpf_paci = c.cpf_paci
-where c.valor > 200;
-
--- selecionar o nome do paciente, de seu dependente e data de nascimento do dependente que nasceu depois de 2020
-select p.nome_paci, d.nm_dep, dt_nasc_dep
-from paciente p join dependente d 
-on p.cpf_paci = d.cpf_paci
-where year(dt_nasc_dep) > 2020;
-
--- 6) Criar relatórios sobre os dados usando o comando SELECT com funções
--- agregadas e agrupamento de dados. Deve ser realizado ao menos 2
--- relatórios por participante.
-
--- Matheus
--- selecionando o tipo e quantos pacientes assinam esse plano
-select pl.tipo_plano, count(pa.cod_plano)
-from plano pl join paciente pa on pa.cod_plano = pl.cod_plano
-group by 1;
-
--- selecionando nome do paciente, o nome e a data de nascimento do dependente mais novo
-select pa.nome_paci, d.nm_dep, min(d.dt_nasc_dep)
-from paciente pa join dependente d on pa.cpf_paci = d.cpf_paci
-group by 1, 2;
-
--- Alexandre
--- selecionar a média de valores ganhos por cada plano
-select p.tipo_plano, round(avg(c.valor), 2) media
-from plano p join contrato c on c.cod_plano = p.cod_plano
-group by 1;
-
--- Quantidade de contratos para cada um dos planos
-select p.tipo_plano, count(*)
-from plano p join contrato c on c.cod_plano = p.cod_plano
-group by 1;
+INSERT INTO contrato (cpf_paci, cod_plano, dt_inicio, validade, valor)
+SELECT 
+    '12345678901', 
+    4, 
+    CURRENT_DATE(), 
+    DATE_ADD(CURRENT_DATE(), INTERVAL 1 YEAR), 
+    (COUNT(d.cpf_dep) + 1) * pl.valor_plano
+FROM paciente p
+LEFT JOIN dependente d ON p.cpf_paci = d.cpf_paci
+JOIN plano pl ON p.cod_plano = pl.cod_plano
+WHERE p.cpf_paci = '12967859630';
