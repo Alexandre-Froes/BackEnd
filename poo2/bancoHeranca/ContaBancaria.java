@@ -14,12 +14,12 @@ public class ContaBancaria {
         saldo += qtd;
     }
 
-    public boolean sacar(double qtd) {
+    public boolean sacar(double qtd) throws MinhasExcecoes{
         if(saldo >= qtd) {
             saldo -= qtd;
             return true;
         } else {
-            return false;
+            throw new MinhasExcecoes("Saldo insuficiente");
         }
     }
 

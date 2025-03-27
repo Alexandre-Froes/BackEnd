@@ -7,12 +7,12 @@ public class ContaCo extends ContaBancaria {
     }
 
     @Override
-    public boolean sacar(double qtd) {
+    public boolean sacar(double qtd) throws MinhasExcecoes{
         if((saldo + limiteChequeEspecial) >= qtd) {
-            saldo -= (qtd - limiteChequeEspecial);
+            saldo -= qtd;
             return true;
         } else {
-            return false;
+            throw new MinhasExcecoes("Saldo insuficiente");
         }
     }
     

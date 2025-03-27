@@ -8,11 +8,11 @@ public class ContaPoEstudantil extends ContaPo{
 
     @Override
     public boolean sacar(double qtd) {
-        if (super.sacar(qtd)) {
-            return true;
-        } else {
+       try{
+            return super.sacar(qtd);
+       } catch (MinhasExcecoes e) {
             return false;
-        }
+       }
     }
 
     public String exibeLimiteIsencao() {

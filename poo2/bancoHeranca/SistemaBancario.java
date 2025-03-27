@@ -1,90 +1,107 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SistemaBancario {
     
     public static void menu() {
         System.out.println(
-            "1- CONTA BANCARIA\n" +
-            "2- CONTA CORRENTE\n" +
-            "3- CONTA CORRENTE PREMIUM\n" +
-            "4- CONTA CORRENTE EMPRESARIAL\n" +
-            "5- CONTA POUPANÇA\n" +
-            "6- CONTA POUPANÇA ESTUDANTIL\n" +
-            "7- SAIR\n"
+            "1. conta bancaria\n" +
+            "2. conta corrente\n" +
+            "3. conta corrente premium\n" +
+            "4. conta corrente empresarial\n" +
+            "5. conta poupança\n" +
+            "6. conta poupança estudantil\n" +
+            "7. sair\n"
         );
     }
     
     public static void subMenuCB() {
         System.out.println(
-            "1- SACAR\n" +
-            "2- DEPOSITAR\n" +
-            "3- EXIBIR SALDO\n" +
-            "4- VOLTAR\n"
+            "1. sacar\n" +
+            "2. depositar\n" +
+            "3. exibir saldo\n" +
+            "4. voltar\n"
         );
     }
     
     public static void subMenuCC() {
         System.out.println(
-            "1- SACAR\n" +
-            "2- DEPOSITAR\n" +
-            "3- EXIBIR SALDO\n" +
-            "4- EXIBIR LIMITE\n" +
-            "5- VOLTAR\n"
+            "1. sacar\n" +
+            "2. depositar\n" +
+            "3. exibir saldo\n" +
+            "4. exibir limite\n" +
+            "5. voltar\n"
         );
     }
     
     public static void subMenuCCP() {
         System.out.println(
-            "1- SACAR\n" +
-            "2- DEPOSITAR\n" +
-            "3- EXIBIR SALDO\n" +
-            "4- EXIBIR LIMITE\n" +
-            "5- EXIBIR BENEFICIO PREMIUM\n" +
-            "6- VOLTAR\n"
+            "1. sacar\n" +
+            "2. depositar\n" +
+            "3. exibir saldo\n" +
+            "4. exibir limite\n" +
+            "5. exibir beneficio premium\n" +
+            "6. voltar\n"
         );
     }
     
     public static void subMenuCCE() {
         System.out.println(
-            "1- SACAR\n" +
-            "2- DEPOSITAR\n" +
-            "3- EXIBIR SALDO\n" +
-            "4- EXIBIR LIMITE\n" +
-            "5- SOLICITAR EMPRESTIMO\n" +
-            "6- VOLTAR\n"
+            "1. sacar\n" +
+            "2. depositar\n" +
+            "3. exibir saldo\n" +
+            "4. exibir limite\n" +
+            "5. solicitar emprestimo\n" +
+            "6. voltar\n"
         );
     }
     
     public static void subMenuCP() {
         System.out.println(
-            "1- SACAR\n" +
-            "2- DEPOSITAR\n" +
-            "3- EXIBIR SALDO\n" +
-            "4- APLICAR RENDIMENTO\n" +
-            "5- VOLTAR\n"
+            "1. sacar\n" +
+            "2. depositar\n" +
+            "3. exibir saldo\n" +
+            "4. aplicar rendimento\n" +
+            "5. voltar\n"
         );
     }
     
     public static void subMenuCPE() {
         System.out.println(
-            "1- SACAR\n" +
-            "2- DEPOSITAR\n" +
-            "3- EXIBIR SALDO\n" +
-            "4- APLICAR RENDIMENTO\n" +
-            "5- EXIBIR LIMITE ISENÇÃO\n" +
-            "6- VOLTAR\n"
+            "1. sacar\n" +
+            "2. depositar\n" +
+            "3. exibir saldo\n" +
+            "4. aplicar rendimento\n" +
+            "5. exibir limite isenção\n" +
+            "6. voltar\n"
         );
     }
 
-    public static boolean sacar(ContaBancaria conta, double valorSaque) {
-        if (conta.sacar(valorSaque)) {
-            System.out.println("Saque de R$" + valorSaque + " realizado com sucesso.");
-            return true;
-        } else {
-            System.out.println("Saldo insuficiente para o saque de R$ " + valorSaque + ".");
-            System.out.println("Saldo atual: R$ " + conta.exibeSaldo());
-            return false;
-        }
+    public static boolean sacar(ContaBancaria conta, double valorSaque, Scanner ler) {
+        boolean precoValido = false;
+        
+        do{
+            try{
+                System.out.print("Digite o valor a sacar (ou 0 para voltar): ");
+                valorSaque = ler.nextDouble();
+                if (valorSaque == 0) break;
+
+                if(conta.sacar(valorSaque)){
+                    System.out.println("Saque de R$" + valorSaque + " realizado com sucesso.");
+                    precoValido = true;
+                }
+
+            } catch(InputMismatchException e) {
+                System.out.println("Valor inválido.");
+                ler.nextLine();
+                return false;
+            } catch(MinhasExcecoes e) {
+                System.out.println(e.getMessage());
+                System.out.println(conta.exibeSaldo());
+                return false;
+            }
+        }while(!precoValido);
+        return true;
     }
 
     public static void depositar(ContaBancaria conta, double valorSaque) {
@@ -122,10 +139,7 @@ public class SistemaBancario {
                         switch (opcaoSub) {
                             case 1:
                                 do {
-                                    System.out.print("Digite o valor a sacar (ou 0 para voltar): ");
-                                    valor = ler.nextDouble();
-                                    if (valor == 0) break;
-                                    continuar = sacar(contaBancaria, valor);
+                                    continuar = sacar(contaBancaria, valor, ler);
                                 } while (!continuar);
                                 break;
                             case 2:
@@ -153,10 +167,7 @@ public class SistemaBancario {
                         switch (opcaoSub) {
                             case 1:
                                 do {
-                                    System.out.print("Digite o valor a sacar (ou 0 para voltar): ");
-                                    valor = ler.nextDouble();
-                                    if (valor == 0) break;
-                                    continuar = sacar(contaCorrente, valor);
+                                    continuar = sacar(contaCorrente, valor, ler);
                                 } while (!continuar);
                                 break;
                             case 2:
@@ -187,10 +198,7 @@ public class SistemaBancario {
                         switch (opcaoSub) {
                             case 1:
                                 do {
-                                    System.out.print("Digite o valor a sacar (ou 0 para voltar): ");
-                                    valor = ler.nextDouble();
-                                    if (valor == 0) break;
-                                    continuar = sacar(contaPremium, valor);
+                                    continuar = sacar(contaPremium, valor, ler);
                                 } while (!continuar);
                                 break;
                             case 2:
@@ -224,10 +232,7 @@ public class SistemaBancario {
                         switch (opcaoSub) {
                             case 1:
                                 do {
-                                    System.out.print("Digite o valor a sacar (ou 0 para voltar): ");
-                                    valor = ler.nextDouble();
-                                    if (valor == 0) break;
-                                    continuar = sacar(contaEmpresarial, valor);
+                                    continuar = sacar(contaEmpresarial, valor, ler);
                                 } while (!continuar);
                                 break;
                             case 2:
@@ -242,13 +247,25 @@ public class SistemaBancario {
                                 System.out.println(contaEmpresarial.exibeLimiteChequeEspecial());
                                 break;
                             case 5:
-                                System.out.print("Digite o valor do empréstimo: ");
-                                valor = ler.nextDouble();
-                                if (contaEmpresarial.solicitaEmprestimo(valor)) {
-                                    System.out.println("Empréstimo concedido!");
-                                } else {
-                                    System.out.println("Empréstimo recusado!");
-                                }
+                                boolean valorValido = false;
+                                do{
+                                    try {
+                                        System.out.print("Digite o valor do empréstimo: ");
+                                        valor = ler.nextDouble();
+                                        if (contaEmpresarial.solicitaEmprestimo(valor)) {
+                                            System.out.println("Empréstimo concedido!");
+                                            valorValido = true;
+                                        } else {
+                                            System.out.println("Empréstimo recusado!");
+                                        }
+                                    } catch (MinhasExcecoes e) {
+                                        System.out.println("Erro ao processar empréstimo: " + e.getMessage());
+                                    }  catch(InputMismatchException e) {
+                                        System.out.println("Valor inválido.");
+                                        ler.nextLine();
+                                    }
+
+                                }while (!valorValido);
                                 break;
                             case 6:
                                 sairSubMenu = true;
@@ -267,10 +284,7 @@ public class SistemaBancario {
                         switch (opcaoSub) {
                             case 1:
                                 do {
-                                    System.out.print("Digite o valor a sacar (ou 0 para voltar): ");
-                                    valor = ler.nextDouble();
-                                    if (valor == 0) break;
-                                    continuar = sacar(contaPoupanca, valor);
+                                    continuar = sacar(contaPoupanca, valor, ler);
                                 } while (!continuar);
                                 break;
                             case 2:
@@ -302,10 +316,7 @@ public class SistemaBancario {
                         switch (opcaoSub) {
                             case 1:
                                 do {
-                                    System.out.print("Digite o valor a sacar (ou 0 para voltar): ");
-                                    valor = ler.nextDouble();
-                                    if (valor == 0) break;
-                                    continuar = sacar(contaEstudantil, valor);
+                                    continuar = sacar(contaEstudantil, valor, ler);
                                 } while (!continuar);
                                 break;
                             case 2:

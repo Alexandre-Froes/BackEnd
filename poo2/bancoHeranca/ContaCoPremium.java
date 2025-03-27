@@ -7,13 +7,13 @@ public class ContaCoPremium extends ContaCo {
     }
 
     @Override
-    public boolean sacar(double qtd) {
+    public boolean sacar(double qtd) throws MinhasExcecoes{
         if(super.sacar(qtd)) {
             saldo += (qtd * cashBackPercentual/100);
             return true;
             
         } else {
-            return false;
+            throw new MinhasExcecoes("Saldo insuficiente");
         }
     }
 

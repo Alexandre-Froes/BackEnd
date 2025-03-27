@@ -6,12 +6,12 @@ public class ContaCoEmpresarial extends ContaCo{
         this.taxaJurosEmprestimo = taxaJurosEmprestimo;
     }
 
-    public boolean solicitaEmprestimo(double qtd) {
+    public boolean solicitaEmprestimo(double qtd) throws MinhasExcecoes{
         if (qtd >= taxaJurosEmprestimo) {
             saldo += qtd;
             return true;
         } else {
-            return false;
+            throw new MinhasExcecoes("Valor de empréstimo inválido");
         }
     }
     
