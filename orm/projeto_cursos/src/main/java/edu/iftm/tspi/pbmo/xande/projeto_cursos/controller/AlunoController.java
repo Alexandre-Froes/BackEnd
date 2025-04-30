@@ -1,6 +1,5 @@
 package edu.iftm.tspi.pbmo.xande.projeto_cursos.controller;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 // import edu.iftm.tspi.pbmo.xande.projeto_cursos.domain.Curso;
 import edu.iftm.tspi.pbmo.xande.projeto_cursos.dto.AlunoDTO;
 // import edu.iftm.tspi.pbmo.xande.projeto_cursos.dto.CursoDTO;
-import edu.iftm.tspi.pbmo.xande.projeto_cursos.dto.ErroDTO;
+import edu.iftm.tspi.pbmo.xande.projeto_cursos.exception.ConflitoDeDadosException;
 import edu.iftm.tspi.pbmo.xande.projeto_cursos.exception.RecursoNaoEncontradoException;
 
 @RestController
@@ -37,10 +36,7 @@ public class AlunoController {
                             .equals(novoAluno.getRa()));
 
         if(existe) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ErroDTO.builder()
-                .msg("Já existe aluno com esse ra.")
-                .data(LocalDateTime.now()));
+            throw new ConflitoDeDadosException("Já existe aluno com esse ra");
         }
         if(novoAluno.getNome() == null || novoAluno.getNome().equals("")) {
             throw new RecursoNaoEncontradoException("Não foi informado um nome do aluno");

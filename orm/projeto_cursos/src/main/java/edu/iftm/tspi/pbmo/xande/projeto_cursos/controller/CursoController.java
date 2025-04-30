@@ -1,6 +1,5 @@
 package edu.iftm.tspi.pbmo.xande.projeto_cursos.controller;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import edu.iftm.tspi.pbmo.xande.projeto_cursos.dto.AlunoDTO;
 import edu.iftm.tspi.pbmo.xande.projeto_cursos.dto.CursoDTO;
-import edu.iftm.tspi.pbmo.xande.projeto_cursos.dto.ErroDTO;
+import edu.iftm.tspi.pbmo.xande.projeto_cursos.exception.ConflitoDeDadosException;
 import edu.iftm.tspi.pbmo.xande.projeto_cursos.exception.RecursoNaoEncontradoException;
 
 import org.springframework.web.bind.annotation.PutMapping;
@@ -38,11 +37,9 @@ public class CursoController {
                             .equals(novoCurso.getSigla()));
 
         if(existe) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ErroDTO.builder()
-                .msg("Já existe curso com essa sigla.")
-                .data(LocalDateTime.now()));
+            throw new ConflitoDeDadosException("Já existe curso com essa sigla.");
         }
+
         if(novoCurso.getNome() == null || novoCurso.getNome().equals("")) {
             throw new RecursoNaoEncontradoException("Não foi informado o nome do curso.");
         }
@@ -82,10 +79,7 @@ public class CursoController {
         if(removido) {
             return ResponseEntity.noContent().build();
         } else if (!vazio) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                ErroDTO.builder()
-                .msg("Existem alunos nesse curso. Não é possivel excluir.")
-                .data(LocalDateTime.now()));
+            throw new ConflitoDeDadosException("Existem alunos nesse curso, não é possível excluir.");
         }
 
             throw new RecursoNaoEncontradoException("Não existe curso com essa sigla.");
