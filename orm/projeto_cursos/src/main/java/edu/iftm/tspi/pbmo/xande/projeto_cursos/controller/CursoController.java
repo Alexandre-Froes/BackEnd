@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +19,11 @@ import edu.iftm.tspi.pbmo.xande.projeto_cursos.dto.CursoDTO;
 import edu.iftm.tspi.pbmo.xande.projeto_cursos.exception.ConflitoDeDadosException;
 import edu.iftm.tspi.pbmo.xande.projeto_cursos.exception.RecursoNaoEncontradoException;
 
-import org.springframework.web.bind.annotation.PutMapping;
-
 @RestController
 @RequestMapping("/cursos")
 public class CursoController {
     private ArrayList<CursoDTO> cursos = new ArrayList<>();
+    private AlunoController alunoController = new AlunoController();
 
     @GetMapping
     public ResponseEntity<ArrayList<CursoDTO>> listarCursos() {
@@ -87,7 +87,18 @@ public class CursoController {
 
     @RequestMapping("/{sigla}/alunos")
     public ResponseEntity<List<AlunoDTO>> listarAlunoPorCurso(@PathVariable String sigla) {
-        List<AlunoDTO> alunos = new ArrayList<>();
-        return ResponseEntity.ok(alunos);
+        ArrayList<AlunoDTO> alunos = alunoController.getListaAlunos();
+        ArrayList<AlunoDTO> alunosCorretos = new ArrayList<>();
+
+        AlunoDTO alunoTeste = new AlunoDTO("t1", "alunoTeste", "emailTeste", "123");
+        alunos.add(alunoTeste);
+    
+        for(AlunoDTO aluno : alunos) {
+            if(aluno.getCursoSigla().equalsIgnoreCase(sigla))
+                alunosCorretos.add(aluno);
+            
+        }
+
+        return ResponseEntity.ok(alunosCorretos);
     }
 }
