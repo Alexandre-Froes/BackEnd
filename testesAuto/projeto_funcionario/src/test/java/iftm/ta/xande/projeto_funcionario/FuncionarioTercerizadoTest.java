@@ -1,7 +1,7 @@
 package iftm.ta.xande.projeto_funcionario;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,10 +13,11 @@ public class FuncionarioTercerizadoTest {
         Double despesasAdicionaisInvalido = 10101010.10;
         String msgEsperada = "O valor para a despesas adicionais foi inválido. O valor tem que ser entre 0 e 1000.";
 
-        FuncionarioTercerizado t1 = new FuncionarioTercerizado(despesasAdicionaisInvalido);
-        Double saidaObtida = t1.getDespesasAdicionais();
+        String msgObtida = assertThrows(IllegalArgumentException.class, () -> {
+            FuncionarioTercerizado t1 = new FuncionarioTercerizado(despesasAdicionaisInvalido);
+        }).getMessage();
 
-        assertEquals(saidaObtida, msgEsperada);
+        assertEquals(msgObtida, msgEsperada);
     }
     
     @Test
@@ -44,8 +45,8 @@ public class FuncionarioTercerizadoTest {
     @Test
     public void testarConstrutorEntradasValidas() {
         String nomeEsperado = "John Doe";
-        Integer horasTrabalhadasEsperado = 20;    
-        Double valorHoraEsperado = 14.5;    
+        Integer horasTrabalhadasEsperado = 20;
+        Double valorHoraEsperado = 14.5;
         Double despesasAdicionaisEsperado = 999.99;
 
         FuncionarioTercerizado saidaObtida = new FuncionarioTercerizado(nomeEsperado, horasTrabalhadasEsperado, valorHoraEsperado, despesasAdicionaisEsperado);
@@ -73,9 +74,12 @@ public class FuncionarioTercerizadoTest {
         Double despesasAdicionaisOriginal = 10.00;
         String msgEsperada = "O valor para a despesas adicionais foi inválido. O valor tem que ser entre 0 e 1000.";
 
-        FuncionarioTercerizado saidaObtida = new FuncionarioTercerizado(despesasAdicionaisOriginal);
-        saidaObtida.setDespesasAdicionais(despesasAdicionaisInvalido);
+        FuncionarioTercerizado t1 = new FuncionarioTercerizado(despesasAdicionaisOriginal);
 
-        assertEquals(saidaObtida.getDespesasAdicionais(), msgEsperada);
+        String msgObtida = assertThrows(IllegalArgumentException.class, () -> {
+            t1.setDespesasAdicionais(despesasAdicionaisInvalido);
+        }).getMessage();
+
+        assertEquals(msgObtida, msgEsperada);
     }
 }

@@ -2,7 +2,6 @@ package iftm.ta.xande.projeto_funcionario;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -19,7 +18,6 @@ public class FuncionarioTest {
         String saidaEsperada = "O Valor do Pagamento precisa ser menor que R$6.072,00";
         Funcionario funcionario = new Funcionario(horasTrabalhadas, valorHora);
         
-        
         String saidaObtida = assertThrows(IllegalArgumentException.class, () -> {funcionario.calcularPagamento();}).getMessage();
         
         assertEquals(saidaEsperada, saidaObtida);
@@ -28,7 +26,7 @@ public class FuncionarioTest {
     @Test
     public void testarPagamentoMenorValido(){
         int horasTrabalhadas = 25;
-        double valorHora = 60.72;
+        double valorHora = 60.71;
 
         double saidaEsperada = 1518.0;
 
@@ -83,7 +81,7 @@ public class FuncionarioTest {
         String mensagemEsperado = "O valor está fora do esperado: entre 4% e 10% do salário mínimo (1518.00)";
 
         String saidaObtida = assertThrows(IllegalArgumentException.class, () -> {new Funcionario(valorHoraInvalido);}).getMessage();
- 
+
         assertEquals(saidaObtida, mensagemEsperado);
     }
 
@@ -127,7 +125,7 @@ public class FuncionarioTest {
         func.setHorasTrabalhadas(20);
         func.setValorHora(68.72);
 
-        String saidaEsperada = "O valor do pagamento precisa ser maior que o salário mínimo (R$1518.00)";
+        String saidaEsperada = "O valor do pagamento precisa ser maior que o salário mínimo (R$1.518,00) e menor que R$6.072,00";
 
         String saidaObtida = assertThrows(IllegalArgumentException.class, () -> {func.calcularPagamento();}).getMessage();
 
@@ -140,10 +138,10 @@ public class FuncionarioTest {
         func.setHorasTrabalhadas(20);
         func.setValorHora(75.9);
 
-        String saidaEsperada = "O valor do pagamento precisa ser maior que o salário mínimo (R$1518.00)";
+        String saidaEsperada = "O valor do pagamento precisa ser maior que o salário mínimo (R$1.518,00) e menor que R$6.072,00";
 
         String saidaObtida = assertThrows(IllegalArgumentException.class, () -> {func.calcularPagamento();}).getMessage();
 
         assertEquals(saidaEsperada, saidaObtida);
     }
-}    
+}
