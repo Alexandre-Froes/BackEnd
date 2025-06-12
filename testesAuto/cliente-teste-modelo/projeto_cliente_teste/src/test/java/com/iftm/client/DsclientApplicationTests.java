@@ -109,7 +109,7 @@ class DsclientApplicationTests {
     }
 
 
-	// A4
+	// A5
     @Test
     @DisplayName("Teste para buscar cliente por ID existente")
     public void TesteBuscarClientePorIdExistente() {
@@ -178,7 +178,7 @@ class DsclientApplicationTests {
     }
 
 
-	// A3
+	// A4
 	@Test
 	@DisplayName("Testa se o método retorna o cliente com o nome desejado.")
 	void TestarMetodoFindClientByNomeValido() {
