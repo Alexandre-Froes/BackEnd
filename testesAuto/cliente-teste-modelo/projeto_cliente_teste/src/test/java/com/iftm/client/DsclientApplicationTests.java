@@ -10,11 +10,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.time.Instant;
-
-import javax.transaction.Transactional;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -34,10 +29,8 @@ import com.iftm.client.services.exceptions.ResourceNotFoundException;
 
 import org.junit.jupiter.api.Assertions;
 
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -207,7 +200,7 @@ class DsclientApplicationTests {
 		List<Client> clients = clientRepository.findClientsByParam(paramGeral);
 		assertNotNull(clients);
 		assertTrue(clients.stream()
-        	.allMatch(client -> client.getName().contains(paramGeral)));
+                .allMatch(client -> client.getName().contains(paramGeral)));
 	}
 
 	@Test
