@@ -8,6 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.edu.iftm.tspi.porm.sistema_jpa.domain.Categoria;
+import br.edu.iftm.tspi.porm.sistema_jpa.domain.DetalhePedido;
+import br.edu.iftm.tspi.porm.sistema_jpa.dto.CategoriaPrecoDTO;
 import br.edu.iftm.tspi.porm.sistema_jpa.dto.CategoriaQuantidadeDTO;
 
 @Repository
@@ -51,4 +53,16 @@ public interface CategoriaRepository extends
     """)
     CategoriaQuantidadeDTO contarProdutoPorCategoria
         (@Param("categoriaId") Integer categoria);
+
+    // @Query("""
+    //     SELECT new br.edu.iftm.tspi.porm.sistema_jpa.dto.CategoriaPrecoDTO(
+    //         c.id,
+    //         c.nome,
+    //         SUM(dp.precoVenda * dp.quantidade * (dp.desconto - 1))
+    //     )
+    //     FROM DetalhePedido dp
+    //     JOIN dp.produto p
+
+    // """)
+    // CategoriaPrecoDTO contarProdutosPorCategoriaPreco();
 }
