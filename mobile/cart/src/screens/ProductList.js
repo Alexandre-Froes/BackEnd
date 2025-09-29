@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, View } from "react-native";
 import { Product } from "../components/Product.js";
 import { getProducts } from "../services/productsService.js";
 
@@ -37,7 +37,7 @@ export const ProductsList = ({ navigation }) => {
 	};
 
 	return (
-		<View>
+		<ScrollView>
 			<FlatList
 				style={styles.productsList}
 				contentContainerStyle={styles.productsListContainer}
@@ -45,7 +45,7 @@ export const ProductsList = ({ navigation }) => {
 				data={products}
 				renderItem={renderProduct}
 			/>
-		</View>
+		</ScrollView>
 	);
 };
 
