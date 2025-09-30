@@ -36,6 +36,24 @@ const App = () => {
     });
   };
 
+  const updateItemQuantity = (id, delta) => {
+    setItensCarrinho((prevItems) => {
+      const newItems = prevItems.map((item) => {
+        if (item.id === id) {
+          const newQty = item.qty + delta;
+          if (newQty <= 0) {
+            return null;
+          } else {
+            return { ...item, qty: newQty };
+          }
+        }
+        return item;
+      }).filter(item => item !== null);
+  
+      return newItems;
+    });
+  };
+
   const getItemsCount = () => {
     return itensCarrinho.reduce((sum, item) => sum + item.qty, 0);
   };
