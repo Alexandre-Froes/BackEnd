@@ -3,13 +3,12 @@ import { View, Text, FlatList, Button, TouchableOpacity, StyleSheet } from "reac
 import { numberFormat } from "../services/numberFormat";
 
 const Cart = ({ items, updateItemQuantity, getTotalPrice }) => {
-
   const handleIncreaseQuantity = (id) => {
-    updateItemQuantity(id, 1); 
+    updateItemQuantity(id, 1);
   };
 
   const handleDecreaseQuantity = (id) => {
-    updateItemQuantity(id, -1); 
+    updateItemQuantity(id, -1);
   };
 
   const handleRemoveItem = (id) => {
@@ -17,24 +16,30 @@ const Cart = ({ items, updateItemQuantity, getTotalPrice }) => {
   };
 
   const renderCartItem = ({ item }) => {
+    console.log(items);
+    console.log(item);
+    const { qty, product } = item;
+
+    if (!product) return null;
+
+    const { name, price } = product;
+
     return (
       <View style={styles.itemContainer}>
-        <Text>{item.product.name}</Text>
-        <Text>{numberFormat(item.product.price)}</Text>
-        
-        <View style={styles.quantityContainer}>
-          <TouchableOpacity onPress={() => handleDecreaseQuantity(item.id)} style={styles.quantityButton}>
-            <Text>-</Text>
-          </TouchableOpacity>
-          
-          <Text>{item.qty}</Text>
-          
-          <TouchableOpacity onPress={() => handleIncreaseQuantity(item.id)} style={styles.quantityButton}>
-            <Text>+</Text>
-          </TouchableOpacity>
+        <View style={styles.itemInfo}>
+          <Text>{name}</Text>
+          <Text>{numberFormat(price)}</Text>
+          <View style={styles.quantityContainer}>
+            <TouchableOpacity onPress={() => handleDecreaseQuantity(item.id)} style={styles.quantityButton}>
+              <Text>-</Text>
+            </TouchableOpacity>
+            <Text>{qty}</Text>
+            <TouchableOpacity onPress={() => handleIncreaseQuantity(item.id)} style={styles.quantityButton}>
+              <Text>+</Text>
+            </TouchableOpacity>
+          </View>
+          <Button title="Remover" onPress={() => handleRemoveItem(item.id)} color="red" />
         </View>
-        
-        <Button title="Remover" onPress={() => handleRemoveItem(item.id)} color="red" />
       </View>
     );
   };
@@ -47,7 +52,6 @@ const Cart = ({ items, updateItemQuantity, getTotalPrice }) => {
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={styles.list}
       />
-      
       <View style={styles.totalContainer}>
         <Text>Total: {numberFormat(getTotalPrice())}</Text>
       </View>
@@ -63,7 +67,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   itemContainer: {
+    flexDirection: "row",
+    alignItems: "center",
     marginVertical: 8,
+  },
+  itemInfo: {
+    flex: 1,
   },
   quantityContainer: {
     flexDirection: "row",
