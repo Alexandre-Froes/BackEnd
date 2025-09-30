@@ -26,7 +26,7 @@ const Cart = ({ items, updateItemQuantity, getTotalPrice }) => {
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemInfo}>
-          <Image source={item.product.image}/>
+          <Image source={item.product.image} style={styles.productImage}/>
           <Text>{name}</Text>
           <Text>{numberFormat(price)}</Text>
           <View style={styles.quantityContainer}>
@@ -73,6 +73,12 @@ const styles = StyleSheet.create({
   },
   itemInfo: {
     flex: 1,
+  },
+  productImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    marginBottom: 8,
   },
   quantityContainer: {
     flexDirection: "row",
