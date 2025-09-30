@@ -15,8 +15,10 @@ public class Server implements Observador {
             while (true) {
                 Socket con = s.accept();
                 System.out.println("Conexão estabelecida!");
-                new Thread(new ServidorSocketThread
-                    (con, server), "ThreadConexão").start();
+                ServidorSocketThread threadSocket = new ServidorSocketThread(con, server);
+                server.conexoes.add(threadSocket);
+                Thread thread = new Thread(threadSocket);
+                thread.start();
             }
         }
     }

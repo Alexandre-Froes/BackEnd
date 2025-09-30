@@ -20,9 +20,9 @@ public class ServidorSocketThread implements Runnable {
     
     @Override
     public void run() {
-        try(
-        DataInputStream input = new 
-            DataInputStream(socketClient.getInputStream())) {
+        try{
+        this.output = new DataOutputStream(socketClient.getOutputStream());
+        DataInputStream input = new DataInputStream(socketClient.getInputStream());
 
             String linha;
             while((linha = input.readUTF()) != null && !linha.isBlank()) {
