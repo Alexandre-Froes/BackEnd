@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { ProductsList } from "./src/screens/ProductList";
 import { ProductDetails } from "./src/screens/ProductDetails";
-import { Cart } from "./src/screens/Cart";
+import Cart from "./src/screens/Cart";
 import { CartIcon } from "./src/components/CartIcon";
 import { useState } from "react";
 import { getProduct } from "./src/services/productsService";
@@ -74,7 +74,14 @@ const App = () => {
             headerRight: () => <CartIcon navigation={navigation} getItemsCount={getItemsCount} />,
           })}
         >
-          {(props) => <Cart {...props} items={itensCarrinho} getTotalPrice={getTotalPrice} />}
+          {(props) => (
+            <Cart
+              {...props}
+              items={itensCarrinho}
+              updateItemQuantity={updateItemQuantity}
+              getTotalPrice={getTotalPrice}
+            />
+          )}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
