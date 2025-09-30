@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList, Button, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, Button, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { numberFormat } from "../services/numberFormat";
 
 const Cart = ({ items, updateItemQuantity, getTotalPrice }) => {
@@ -16,17 +16,17 @@ const Cart = ({ items, updateItemQuantity, getTotalPrice }) => {
   };
 
   const renderCartItem = ({ item }) => {
-    console.log(items);
-    console.log(item);
     const { qty, product } = item;
+    console.log(item)
 
     if (!product) return null;
 
-    const { name, price } = product;
+    const { name, price, image } = product;
 
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemInfo}>
+          <Image source={item.product.image}/>
           <Text>{name}</Text>
           <Text>{numberFormat(price)}</Text>
           <View style={styles.quantityContainer}>
