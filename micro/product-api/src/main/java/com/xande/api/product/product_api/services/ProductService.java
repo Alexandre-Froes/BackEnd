@@ -3,7 +3,6 @@ package com.xande.api.product.product_api.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,17 +20,27 @@ import lombok.RequiredArgsConstructor;
 public class ProductService {
     private final ProductRepository productRepository;
 
-    public List<ProductDto> findAll() {
+    public List<ProductDto> getAll() {
         List<Product> products = productRepository.findAll();
         return products.stream()
             .map(ProductDto::convert)
             .collect(Collectors.toList());
     }
 
-    public ProductDto findById(ObjectId id) {
+    public ProductDto findById(String id) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
         return ProductDto.convert(product);
+    }
+
+    public List<ProductDto> findByProductIdentifier(String productIdentifier) {
+        List<Product> products = productRepository.findAllByProductIdentifier(productIdentifier);
+        if (products.isEmpty()) {
+            throw new RuntimeException("Produto não encontrado");
+        }
+        return products.stream()
+            .map(ProductDto::convert)
+            .collect(Collectors.toList());
     }
 
     public ProductDto save(ProductDto productDto) {
@@ -39,7 +48,7 @@ public class ProductService {
         return ProductDto.convert(product);
     }
 
-    public ProductDto update(ObjectId id, ProductDto productDto) {
+    public ProductDto update(String id, ProductDto productDto) {
         Product existingProduct = productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
@@ -53,7 +62,7 @@ public class ProductService {
         return ProductDto.convert(updatedProduct);
     }
 
-    public void delete(ObjectId id) {
+    public void delete(String id) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
 
@@ -65,5 +74,13 @@ public class ProductService {
         return products.map(ProductDto::convert);
     }
 
-    
+    public List<ProductDto> getByCategoryId(String categoryId) {
+        List<Product> products = productRepository.findAllByCategory(categoryId);
+
+        return products.stream()
+            .map(ProductDto::convert)
+            .collect(Collectors.toList());
+    }
+
+
 }

@@ -1,6 +1,5 @@
 package com.xande.api.product.product_api.model;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -11,7 +10,7 @@ import lombok.Data;
 @Document(collection = "products")
 public class Product {
     @Id
-    private ObjectId id;
+    private String id;
     private String productIdentifier;
     private String nome;
     private String descricao;

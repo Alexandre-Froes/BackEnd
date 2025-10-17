@@ -1,6 +1,5 @@
 package com.xande.api.product.product_api.model.dto;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 import com.xande.api.product.product_api.model.*;
@@ -14,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductDto {
     @Id
-    private ObjectId id;
+    private String id;
     private String productIdentifier;
     private String nome;
     private String descricao;

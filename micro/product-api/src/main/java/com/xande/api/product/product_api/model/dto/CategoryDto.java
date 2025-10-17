@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 @Data
@@ -15,7 +14,7 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 public class CategoryDto {
     @Id
-    private ObjectId id;
+    private String id;
     @NotBlank(message = "O nome da categoria é obrigatório")
     private String nome;
 

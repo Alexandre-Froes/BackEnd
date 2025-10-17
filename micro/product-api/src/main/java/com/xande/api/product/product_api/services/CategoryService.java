@@ -3,7 +3,6 @@ package com.xande.api.product.product_api.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,7 +26,7 @@ public class CategoryService {
             .collect(Collectors.toList());
     }
 
-    public CategoryDto findById(ObjectId id) {
+    public CategoryDto findById(String id) {
         Category categoria = categoryRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
         return CategoryDto.convert(categoria);
@@ -38,7 +37,7 @@ public class CategoryService {
         return CategoryDto.convert(categoria);
     }
 
-    public CategoryDto update(ObjectId id, CategoryDto categoryDto) {
+    public CategoryDto update(String id, CategoryDto categoryDto) {
         Category categoriaExistente = categoryRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 
@@ -48,7 +47,7 @@ public class CategoryService {
         return CategoryDto.convert(categoriaAtualizada);
     }
 
-    public void delete(ObjectId id) {
+    public void delete(String id) {
         Category categoria = categoryRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
 

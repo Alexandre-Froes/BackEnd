@@ -1,6 +1,5 @@
 package com.xande.api.product.product_api.model;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +11,7 @@ import lombok.Data;
 @Document(collection = "categories")
 public class Category {
     @Id
-    private ObjectId id;
+    private String id;
     private String nome;
 
     public static Category convert(CategoryDto categoryDto) {
