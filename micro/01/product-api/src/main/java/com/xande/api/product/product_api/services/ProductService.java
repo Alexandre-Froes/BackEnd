@@ -1,86 +1,77 @@
 package com.xande.api.product.product_api.services;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import com.xande.api.product.product_api.model.Category;
 import com.xande.api.product.product_api.model.Product;
 import com.xande.api.product.product_api.model.dto.ProductDto;
 import com.xande.api.product.product_api.repositories.ProductRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-    private final ProductRepository productRepository;
+    private final ProductRepository repository;
 
     public List<ProductDto> getAll() {
-        List<Product> products = productRepository.findAll();
-        return products.stream()
-            .map(ProductDto::convert)
-            .collect(Collectors.toList());
-    }
-
-    public ProductDto findById(String id) {
-        Product product = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-        return ProductDto.convert(product);
-    }
-
-    public List<ProductDto> findByProductIdentifier(String productIdentifier) {
-        List<Product> products = productRepository.findAllByProductIdentifier(productIdentifier);
-        if (products.isEmpty()) {
-            throw new RuntimeException("Produto não encontrado");
-        }
-        return products.stream()
-            .map(ProductDto::convert)
-            .collect(Collectors.toList());
-    }
-
-    public ProductDto save(ProductDto productDto) {
-        Product product = productRepository.save(Product.convert(productDto));
-        return ProductDto.convert(product);
-    }
-
-    public ProductDto update(String id, ProductDto productDto) {
-        Product existingProduct = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-        existingProduct.setProductIdentifier(productDto.getProductIdentifier());
-        existingProduct.setNome(productDto.getNome());
-        existingProduct.setDescricao(productDto.getDescricao());
-        existingProduct.setPreco(productDto.getPreco());
-        existingProduct.setCategoriaId(Category.convert(productDto.getCategoriaId()));
-
-        Product updatedProduct = productRepository.save(existingProduct);
-        return ProductDto.convert(updatedProduct);
-    }
-
-    public void delete(String id) {
-        Product product = productRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
-
-        productRepository.delete(product);
+        return repository.findAll().stream()
+                .map(ProductDto::convert)
+                .collect(Collectors.toList());
     }
 
     public Page<ProductDto> getAllPage(Pageable page) {
-        Page<Product> products = productRepository.findAll(page);
-        return products.map(ProductDto::convert);
+        Page<Product> productos = repository.findAll(page);
+        return productos.map(ProductDto::convert);
+    }
+
+    public ProductDto findById(String id) {
+        Product p = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+        return ProductDto.convert(p);
+    }
+
+    public List<ProductDto> findByProductIdentifier(String productIdentifier) {
+        List<Product> produtoEncontrado = repository.findAllByProductIdentifier(productIdentifier);
+        if (produtoEncontrado.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado");
+        }
+        return produtoEncontrado.stream().map(ProductDto::convert).collect(Collectors.toList());
+    }
+
+    public ProductDto save(ProductDto dto) {
+        Product saved = repository.save(Product.convert(dto));
+        return ProductDto.convert(saved);
+    }
+
+    public ProductDto update(String id, ProductDto dto) {
+        Product produtoExistente = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+
+        if (dto.getProductIdentifier() != null) produtoExistente.setProductIdentifier(dto.getProductIdentifier());
+        if (dto.getNome() != null) produtoExistente.setNome(dto.getNome());
+        if (dto.getDescricao() != null) produtoExistente.setDescricao(dto.getDescricao());
+        if (dto.getPreco() != null) produtoExistente.setPreco(dto.getPreco());
+        if (dto.getCategoriaId() != null) produtoExistente.setCategoriaId(Category.convert(dto.getCategoriaId()));
+
+        Product updated = repository.save(produtoExistente);
+        return ProductDto.convert(updated);
+    }
+
+    public void delete(String id) {
+        Product p = repository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado"));
+        repository.delete(p);
     }
 
     public List<ProductDto> getByCategoryId(String categoryId) {
-        List<Product> products = productRepository.findAllByCategory(categoryId);
-
-        return products.stream()
-            .map(ProductDto::convert)
-            .collect(Collectors.toList());
+        return repository.findAllByCategory(categoryId).stream()
+                .map(ProductDto::convert)
+                .collect(Collectors.toList());
     }
-
-
 }

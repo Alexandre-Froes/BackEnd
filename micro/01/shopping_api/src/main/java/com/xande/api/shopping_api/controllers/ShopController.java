@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -54,5 +55,48 @@ public class ShopController {
     @GetMapping("/product/{productIdentifier}")
     public List<ShopDto> findByProductIdentifier(@PathVariable String productIdentifier) {
         return service.findByProductIdentifier(productIdentifier);
+    }
+
+    @GetMapping("/search")
+    public List<ShopDto> search(
+            @RequestParam(required = false) String userIdentifier,
+            @RequestParam(required = false) String productIdentifier,
+            @RequestParam(required = false) String date) {
+
+        if (productIdentifier != null && !productIdentifier.isBlank()) {
+            return service.findByProductIdentifier(productIdentifier);
+        }
+
+        if (userIdentifier != null && !userIdentifier.isBlank()) {
+            return service.findByUserIdentifier(userIdentifier);
+        }
+
+        if (date != null && !date.isBlank()) {
+            LocalDate d;
+            try {
+                d = LocalDate.parse(date);
+            } catch (DateTimeParseException ex) {
+                throw new IllegalArgumentException("date must be yyyy-MM-dd");
+            }
+            return service.findByDate(d);
+        }
+
+        return service.findAll();
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<?> report(
+            @RequestParam String start,
+            @RequestParam String end) {
+        try {
+            LocalDateTime s = LocalDateTime.parse(start);
+            LocalDateTime e = LocalDateTime.parse(end);
+            List<ShopDto> result = service.getReportBetween(s, e);
+            return ResponseEntity.ok(result);
+        } catch (DateTimeParseException ex) {
+            return ResponseEntity.badRequest().body("start/end must be 2025-10-09T21:39:35.055)");
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 }

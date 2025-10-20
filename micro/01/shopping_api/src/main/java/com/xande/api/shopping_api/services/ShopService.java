@@ -6,6 +6,7 @@ import com.xande.api.shopping_api.repositories.ShopRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,5 +47,17 @@ public class ShopService {
 
     public List<ShopDto> findByProductIdentifier(String productIdentifier) {
         return repository.findByItemsProductIdentifier(productIdentifier).stream().map(Shop::toDto).collect(Collectors.toList());
+    }
+
+    public List<ShopDto> getReportBetween(LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null || endDate == null) {
+            throw new IllegalArgumentException("start and end are required");
+        }
+        if (endDate.isBefore(startDate)) {
+            throw new IllegalArgumentException("end must be after or equal to start");
+        }
+        return repository.findByDateBetween(startDate, endDate).stream()
+                .map(Shop::toDto)
+                .collect(Collectors.toList());
     }
 }
