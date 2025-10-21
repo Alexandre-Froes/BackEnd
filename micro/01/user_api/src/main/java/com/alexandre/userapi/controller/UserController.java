@@ -45,6 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{cpf}/cpf")
+    @ResponseStatus(HttpStatus.OK)
     public UserDto findByCpf(@PathVariable("cpf") String cpf) {
         return userService.findByCpf(cpf);
     }

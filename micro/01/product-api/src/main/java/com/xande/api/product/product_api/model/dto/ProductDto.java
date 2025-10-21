@@ -18,16 +18,21 @@ public class ProductDto {
     private String nome;
     private String descricao;
     private Double preco;
-    private CategoryDto categoriaId;
+    private CategoryDto category;
 
     public static ProductDto convert(Product product) {
-        return new ProductDto(
-            product.getId(),
-            product.getProductIdentifier(),
-            product.getNome(),
-            product.getDescricao(),
-            product.getPreco(),
-            CategoryDto.convert(product.getCategoriaId())
-        );
+        ProductDto dto = new ProductDto();
+        dto.setId(product.getId());
+        dto.setProductIdentifier(product.getProductIdentifier());
+        dto.setNome(product.getNome());
+        dto.setDescricao(product.getDescricao());
+        dto.setPreco(product.getPreco());
+
+        if (product.getCategory() != null) {
+            dto.setCategory(CategoryDto.convert(product.getCategory()));
+        } else {
+            dto.setCategory(null);
+        }
+        return dto;
     }
 }

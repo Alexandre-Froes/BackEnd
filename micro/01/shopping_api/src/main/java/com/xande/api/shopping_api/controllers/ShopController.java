@@ -2,6 +2,8 @@ package com.xande.api.shopping_api.controllers;
 
 import com.xande.api.shopping_api.model.dto.ShopDto;
 import com.xande.api.shopping_api.services.ShopService;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,7 @@ public class ShopController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ShopDto> save(@RequestBody ShopDto dto) {
         ShopDto saved = service.save(dto);
         return ResponseEntity.ok(saved);

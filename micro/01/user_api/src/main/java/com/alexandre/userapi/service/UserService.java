@@ -29,33 +29,39 @@ public class UserService {
     }
 
     public UserDto findById(String userId) {
-    User usuario = userRepository.findById(userId)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-    return UserDto.convert(usuario);
+        User usuario = userRepository.findById(userId)
+        .orElseThrow(() -> new ResponseStatusException
+                (HttpStatus.NOT_FOUND, "User not found"));
+
+        return UserDto.convert(usuario);
+    }
+
+    public UserDto findByCpf(String cpf) {
+        User usuario = userRepository.findByCpf(cpf);
+
+        if(usuario == null) {
+            throw new ResponseStatusException
+                (HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        return UserDto.convert(usuario);
     }
 
     public UserDto save(UserDto userDto) {
         userDto.setDataCadastro(LocalDateTime.now());
-        User user = userRepository.save(User.convert(userDto));
-        return UserDto.convert(user);
+        User usuario = userRepository.save(User.convert(userDto));
+        return UserDto.convert(usuario);
     }
 
     public UserDto delete(String userId) {
-        User user = userRepository
-                .findById(userId).orElseThrow(() -> new RuntimeException());
+        User usuario = userRepository
+                .findById(userId).orElseThrow(() -> new ResponseStatusException
+                (HttpStatus.NOT_FOUND, "User not found"));
 
-        userRepository.delete(user);
-        return UserDto.convert(user);
+        userRepository.delete(usuario);
+        return UserDto.convert(usuario);
     }
 
-    public UserDto findByCpf(String cpf) {
-        User user = userRepository.findByCpf(cpf);
-        if (user != null) {
-            return UserDto.convert(user);
-        }
-
-        return null;
-    }
 
     public List<UserDto> queryByName(String nome) {
         List<User> usuarios = userRepository.queryByNomeLike(nome);
@@ -74,7 +80,9 @@ public class UserService {
 
     public UserDto editUser(String userId, UserDto userDto) {
         User user = userRepository
-            .findById(userId).orElseThrow(() -> new RuntimeException());
+            .findById(userId).orElseThrow(() -> new ResponseStatusException
+                (HttpStatus.NOT_FOUND, "User not found"));
+
         if(userDto.getEmail() != null &&
                 !user.getEmail().equals(userDto.getEmail())) {
             

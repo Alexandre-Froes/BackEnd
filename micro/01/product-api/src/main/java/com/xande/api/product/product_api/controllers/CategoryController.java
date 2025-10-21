@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,14 +41,16 @@ public class CategoryController {
         return categoryService.save(categoryDto);
     }
 
-    @PutMapping("/{id}")
-    public CategoryDto putMethodName(@PathVariable("id") String id, 
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public CategoryDto update(@PathVariable("id") String id, 
         @RequestBody @Valid CategoryDto categoryDto) {
         
         return categoryService.update(id, categoryDto);
     }
 
     @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") String id) {
         categoryService.delete(id);
     }

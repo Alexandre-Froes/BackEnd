@@ -3,6 +3,7 @@ package com.xande.api.product.product_api.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import com.xande.api.product.product_api.model.dto.ProductDto;
 
 import lombok.Data;
 
@@ -16,10 +17,10 @@ public class Product {
     private String descricao;
     private Double preco;
 
-    @DBRef
-    private Category categoriaId;
+    @DBRef(lazy = false)
+    private Category category;
 
-    public static Product convert(com.xande.api.product.product_api.model.dto.ProductDto productDto) {
+    public static Product convert(ProductDto productDto) {
         Product product = new Product();
         product.setId(productDto.getId());
         product.setProductIdentifier(productDto.getProductIdentifier());
@@ -27,8 +28,8 @@ public class Product {
         product.setDescricao(productDto.getDescricao());
         product.setPreco(productDto.getPreco());
         
-        if (productDto.getCategoriaId() != null) {
-            product.setCategoriaId(Category.convert(productDto.getCategoriaId()));
+        if (productDto.getCategory() != null) {
+            product.setCategory(Category.convert(productDto.getCategory()));
         }
         return product;
     }
