@@ -1,6 +1,7 @@
 package com.xande.api.product.product_api.model.dto;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import com.xande.api.product.product_api.model.*;
 
@@ -18,6 +19,8 @@ public class ProductDto {
     private String nome;
     private String descricao;
     private Double preco;
+
+    @DBRef
     private CategoryDto category;
 
     public static ProductDto convert(Product product) {

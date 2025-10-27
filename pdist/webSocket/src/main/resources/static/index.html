@@ -36,9 +36,8 @@
 <body>
   <h2>Chat em tempo real (Spring + STOMP)</h2>
   <h3>Usuários conectados</h3>
-  <div id="userList">
-    <ul id="usersOnline"></ul>  
-  </div>
+<ul id="usuarios-online"></ul>
+
 
   <div class="row">
     <input id="username" placeholder="Seu nome" />
@@ -55,93 +54,116 @@
 
   <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
   <script>
-    let stomp = null;
-    let connected = false;
-    const log = (m) => {
-      const el = document.getElementById('log');
-      const p = document.createElement('div');
-      p.innerHTML = m;
-      el.appendChild(p);
-      el.scrollTop = el.scrollHeight;
-    };
+    document.addEventListener("DOMContentLoaded", () => {
+      const lista = document.getElementById("usuarios-online");
+      lista.innerHTML = "";
 
-    function connect() {
-      const user = document.getElementById('username').value?.trim();
-      if (!user) { alert('Informe seu nome'); return; }
+      let stomp = null;
+      let connected = false;
+      const log = (m) => {
+        const el = document.getElementById('log');
+        const p = document.createElement('div');
+        p.innerHTML = m;
+        el.appendChild(p);
+        el.scrollTop = el.scrollHeight;
+      };
 
-      const wsUrl = "ws://localhost:8080/ws";
-      const ws = new WebSocket(wsUrl);
-      stomp = Stomp.over(ws);
-
-      stomp.connect({}, () => {
-        connected = true;
-        document.getElementById('connectBtn').disabled = true;
-        document.getElementById('username').disabled = true;
-        document.getElementById('disconnectBtn').disabled = false;
-        document.getElementById('sendPublicBtn').disabled = false;
-
-        stomp.subscribe('/topic/public', frame => {
-          const msg = JSON.parse(frame.body);
-          if(msg.tipoMensagem === 'ENTRAR') 
-            log(`<i><b>${msg.origem}</b> entrou</i>`);
-          else 
-            log(`<b>[${msg.tipoMensagem}]</b> ${msg.origem ?? ''}: ${msg.texto} <small>${msg.dataHora}</small>`);
-        });
-
-        trackUsers();
-        stomp.send("/app/chat.users", {}, {})
-
-        stomp.send('/app/chat.join', {}, JSON.stringify({ origem: user }));
-        log(`<i>Conectado como ${user}</i>`);
-      }, (err) => {
-        log(`<span style="color:#c00">Erro de conexão: ${err}</span>`);
-      });
-    }
-
-    function disconnect() {
-      if (stomp && connected) {
+      function connect() {
         const user = document.getElementById('username').value?.trim();
-        stomp.send('/app/chat.leave', {}, JSON.stringify({ origem: user }));
+        if (!user) { alert('Informe seu nome'); return; }
 
+        const wsUrl = "ws://localhost:8080/ws";
+        const ws = new WebSocket(wsUrl);
+        stomp = Stomp.over(ws);
 
-        stomp.disconnect(() => log('<i>Desconectado </i>'));
-        connected = false;
-        document.getElementById('connectBtn').disabled = false;
-        document.getElementById('disconnectBtn').disabled = true;
-        document.getElementById('sendPublicBtn').disabled = true;
-      }
-    }
+        stomp.connect({}, () => {
+          trackUsers();
 
-    function sendPublic() {
-      const user = document.getElementById('username').value?.trim();
-      const texto = document.getElementById('message').value?.trim();
-      if (!texto) return;
-      stomp.send('/app/chat.send', {}, JSON.stringify({ origem: user, texto }));
-      document.getElementById('message').value = '';
-    }
+          connected = true;
+          document.getElementById('connectBtn').disabled = true;
+          document.getElementById('username').disabled = true;
+          document.getElementById('disconnectBtn').disabled = false;
+          document.getElementById('sendPublicBtn').disabled = false;
 
-    function trackUsers() {
-      stomp.subscribe('/topic/users', frame => {
-          const users = JSON.parse(frame.body);
-          console.log("testeaaaa" + users);
-          const userList = document.getElementById('usersOnline');
-
-          userList.innerHTML = '';
-
-          users.forEach(user => {
-              const li = document.createElement('li');
-              li.textContent = user;
-              userList.appendChild(li);
+          stomp.subscribe('/topic/public', frame => {
+            const msg = JSON.parse(frame.body);
+            if(msg.tipoMensagem === 'ENTRAR') 
+              log(`<i><b>${msg.origem}</b> entrou</i>`);
+            else 
+              log(`<b>[${msg.tipoMensagem}]</b> ${msg.origem ?? ''}: ${msg.texto} <small>${msg.dataHora}</small>`);
           });
 
-          log(`<i>Usuários conectados: ${users.join(', ')}</i>`);
-      });
-    }
+          stomp.send('/app/chat.join', {}, JSON.stringify({ origem: user }));
+          log(`<i>Conectado como <b>${user}</b></i>`);
 
-    document.getElementById('connectBtn').onclick = connect;
-    document.getElementById('disconnectBtn').onclick = disconnect;
-    document.getElementById('sendPublicBtn').onclick = sendPublic;
+          // Ver quem ta online depois de conectar
+          trackUsers();
 
+        }, (err) => {
+          log(`<span style="color:#c00">Erro de conexão: ${err}</span>`);
+        });
+      }
+
+      function disconnect() {
+        if (stomp && connected) {
+          const user = document.getElementById('username').value?.trim();
+          stomp.send('/app/chat.leave', {}, JSON.stringify({ origem: user }));
+
+          stomp.disconnect(() => log('<i>Desconectado </i>'));
+            trackUsers();
+            connected = false;
+            document.getElementById('connectBtn').disabled = false;
+            document.getElementById('disconnectBtn').disabled = true;
+            document.getElementById('sendPublicBtn').disabled = true;
+          }
+
+        trackUsers();
+      }
+
+      function sendPublic() {
+        const user = document.getElementById('username').value?.trim();
+        const texto = document.getElementById('message').value?.trim();
+        if (!texto) return;
+        stomp.send('/app/chat.send', {}, JSON.stringify({ origem: user, texto }));
+        document.getElementById('message').value = '';
+      }
+
+      function trackUsers() {
+        console.log('teste')
+        stomp.subscribe('/topic/online', frame => {
+          const usuarios = JSON.parse(frame.body);
+          console.log("Usuários online:", usuarios);
+
+          atualizarListaUsuariosDinamica(usuarios);
+        });
+      }
+
+      function atualizarListaUsuariosDinamica(usuariosAtuais) {
+        const lista = document.getElementById("usuarios-online");
+
+        // Remove usuários que saíram
+        [...lista.children].forEach(li => {
+          if (!usuariosAtuais.includes(li.textContent)) {
+            li.remove();
+          }
+        });
+
+        // Adiciona novos usuários
+        usuariosAtuais.forEach(usuario => {
+          const existe = [...lista.children].some(li => li.textContent === usuario);
+          if (!existe) {
+            const item = document.createElement("li");
+            item.textContent = usuario;
+            lista.appendChild(item);
+          }
+        });
+      }
+
+
+      document.getElementById('connectBtn').onclick = connect;
+      document.getElementById('disconnectBtn').onclick = disconnect;
+      document.getElementById('sendPublicBtn').onclick = sendPublic;
+    });
 
   </script>
 </body>

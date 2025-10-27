@@ -28,7 +28,7 @@ public class CategoryService {
 
     public CategoryDto findById(String id) {
         Category categoria = categoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+            .orElseThrow(() -> new RuntimeException("Categoria não encontrada findById"));
         return CategoryDto.convert(categoria);
     }
 
@@ -39,7 +39,7 @@ public class CategoryService {
 
     public CategoryDto update(String id, CategoryDto categoryDto) {
         Category categoriaExistente = categoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+            .orElseThrow(() -> new RuntimeException("Categoria não encontrada update"));
 
         categoriaExistente.setNome(categoryDto.getNome());
 
@@ -49,7 +49,7 @@ public class CategoryService {
 
     public void delete(String id) {
         Category categoria = categoryRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
+            .orElseThrow(() -> new RuntimeException("Categoria não encontrada delete"));
 
         categoryRepository.delete(categoria);
     }

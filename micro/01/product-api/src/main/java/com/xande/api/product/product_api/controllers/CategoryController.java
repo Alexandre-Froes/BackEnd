@@ -41,7 +41,7 @@ public class CategoryController {
         return categoryService.save(categoryDto);
     }
 
-    @PatchMapping("/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public CategoryDto update(@PathVariable("id") String id, 
         @RequestBody @Valid CategoryDto categoryDto) {

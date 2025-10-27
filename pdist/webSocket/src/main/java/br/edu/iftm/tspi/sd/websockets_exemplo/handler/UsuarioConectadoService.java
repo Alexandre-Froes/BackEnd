@@ -1,28 +1,24 @@
 package br.edu.iftm.tspi.sd.websockets_exemplo.handler;
 
-import java.util.List;
+
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
 @Service
 public class UsuarioConectadoService {
-    private final ConcurrentHashMap<String, String> usuariosConectados = new ConcurrentHashMap<>();
+    private final Set<String> usuariosConectados = ConcurrentHashMap.newKeySet();
 
-    public void adicionarUsuario(String sessionId, String username) {
-        usuariosConectados.put(sessionId, username);
+    public synchronized void adicionarUsuario(String username) {
+        usuariosConectados.add(username);
     }
 
-    public void removerUsuario(String sessionId) {
-        usuariosConectados.remove(sessionId);
+    public synchronized void removerUsuario(String username) {
+        usuariosConectados.remove(username);
     }
 
-    public List<String> getUsuarios() {
-        List<String> usuarios;
-        synchronized (usuariosConectados) {
-            usuarios = List.copyOf(usuariosConectados.values());
-        }
-
-        return usuarios;
+    public synchronized Set<String> getUsuarios() {
+        return usuariosConectados;
     }
 }
