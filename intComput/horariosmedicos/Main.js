@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     let populacao = new Array();
     let notas = new Array();
-    // const medicos = new Array();
 
     const medicos = [
         // 5 Clínicos Gerais (CG)
@@ -45,21 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log(populacao);
 
-    // function geraMedico() {
-    //     const especialidades = [
-    //         'CG', 'PE', 'GI', 'OR', 'CA'
-    //     ]
-
-    //     for(var i = 0; i<25;++i) {
-    //         const random0a4 = Math.floor(Math.random() * 5);
-    //         let medico = {
-    //             id: i,
-    //             especialidade: especialidades[random0a4]
-    //         }
-    //         medicos.add(medico)
-    //     }
-    // }
-
     function geraPopulacao(popInicial) {
         for (var i = 0; i < popInicial; ++i) {
             let cromossomo = [];
@@ -71,79 +54,104 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function avaliacao(cromossomo) {
-        let softPen = 1;
-        let mediumPen = softPen * 3;
-        let hardPen = softPen * 6;
-
+    function avaliacao(cromossomo, config) {
         let penTotal = 0;
-        let medicoTurnoAnt = []; // qual médico estava antes em cada turno
+        const turnosPorMedico = new Uint8Array(25);
+        let idsTurnoAnterior = new Set();
 
-        for (let i = 0; i < cromossomo.length; i += 27) {
-            const medicosDoDia = cromossomo.slice(i, i + 27);
+        // LOOP DE DIAS
+        for (let idDia = 0; idDia < cromossomo.length; idDia += 27) {
+            
+            // LOOP DE TURNOS
+            for (let j = 0; j < 27; j += 9) {
+                const idTurno = idDia + j;
+                const vistosNoTurno = new Set();
 
-            // Validamos cada uma das 3 unidades no dia
-            for (let u = 0; u < 3; u++) {
+                // LOOP DE UNIDADES
+                for (let k = 0; k < 9; k += 3) {
+                    const idUnidade = idTurno + k;
+                    
+                    let contagemCG = 0;
+                    const medicosNaUnidade = new Set();
 
-                const m1 = medicosDoDia[u * 3 + 0], m2 = medicosDoDia[u * 3 + 1], m3 = medicosDoDia[u * 3 + 2]; // Manhã
-                const t1 = medicosDoDia[u * 3 + 9], t2 = medicosDoDia[u * 3 + 10], t3 = medicosDoDia[u * 3 + 11]; // Tarde
-                const n1 = medicosDoDia[u * 3 + 18], n2 = medicosDoDia[u * 3 + 19], n3 = medicosDoDia[u * 3 + 20]; // Noite
+                    // COLETA DE DADOS DA UNIDADE
+                    for (let m = 0; m < 3; m++) {
+                        const idMed = cromossomo[idUnidade + m];
 
-                const escalaDaUnidadeNoDia = [m1, m2, m3, t1, t2, t3, n1, n2, n3];
+                        turnosPorMedico[idMed]++;
 
-                // Mapeamos os IDs para suas Especialidades
-                const especialidadesNoDia = escalaDaUnidadeNoDia.map(id => medicos[id].especialidade);
-                
-                const diversidade = new Set(especialidadesNoDia).size;
+                        if (medicos[idMed].especialidade === 'CG') {
+                            contagemCG++;
+                        }
 
-                if (diversidade < 5) {
+                        if (idsTurnoAnterior.has(idMed)) {
+                            penTotal += config.hardPen; 
+                        }
 
-                    // TODO: tem que ver esse peso aqui
-                    penTotal += mediumPen; 
+                        medicosNaUnidade.add(idMed);
+                        vistosNoTurno.add(idMed);
+                    }
+
+                    penTotal += regraClinicoGeralUnidade(contagemCG, config);
+                    penTotal += regraMedicosDistintosUnidade(medicosNaUnidade.size, config);
                 }
+
+                penTotal += regraConflitoInternoTurno(vistosNoTurno.size, config);
+
+                idsTurnoAnterior = vistosNoTurno;
             }
         }
 
-        for (let i = 0; i < cromossomo.length; i += 9) {
-            const medicosTurnoAtual = cromossomo.slice(i, i + 9);
-
-            // se tiver menos de 9 médicos ele pega o resto e faz * 500
-            // no set n repete coisa ent se tiver menos é pq tem repetido
-            penTotal += (9 - new Set(medicosTurnoAtual).size) * hardPen;
-
-            // turno sem clinico geral
-            for (let un = 0; un < 9; un += 3) {
-                const unidade = medicosTurnoAtual.slice(un, un + 3);
-                
-                let temCG = unidade.some(id => medicos[id].especialidade === 'CG');
-                if (!temCG) penTotal += mediumPen;
-            }
-
-            // turno tem medico consecutivo
-            if (medicoTurnoAnt.length > 0) {
-                medicosTurnoAtual.forEach(id => {
-                    if (medicoTurnoAnt.includes(id)) penTotal += softPen;
-                });
-            }
-
-            medicoTurnoAnt = medicosTurnoAtual;
-        }
+        penTotal += regraCargaHorariaSemanal(turnosPorMedico, config);
 
         return penTotal;
     }
 
-
-    function avaliaCromossomo() {
-        for (const cromossomo of populacao) {
-            notas.push(avaliacao(cromossomo));
-        }
-
-        return notas.sort();
+    function regraClinicoGeralUnidade(contagemCG, config) {
+        return contagemCG < 1 ? config.mediumPen : 0;
     }
 
+    function regraMedicosDistintosUnidade(totalDistintosNaUnidade, config) {
+        if (totalDistintosNaUnidade < 3) {
+            return (3 - totalDistintosNaUnidade) * config.hardPen;
+        }
+        return 0;
+    }
+
+    function regraConflitoInternoTurno(totalNoTurno, config) {
+        if (totalNoTurno < 9) return (9 - totalNoTurno) * config.hardPen;
+        return 0;
+    }
+
+    // considerei que cada turno tem 8 horas (por mais que n faça mto sentido)
+    function regraCargaHorariaSemanal(turnosPorMedico, config) {
+        let p = 0;
+        for (let i = 0; i < turnosPorMedico.length; i++) {
+            if (turnosPorMedico[i] > 5) {
+                p += (turnosPorMedico[i] - 5) * config.heavyPen;
+            }
+        }
+        return p;
+    }
+
+    function avaliaCromossomo() {
+        const CONFIGPEN = {
+            softPen: 1,
+            mediumPen: 4,
+            hardPen: 8,
+            heavyPen: 15
+        }
+
+        for (const cromossomo of populacao) {
+            notas.push(avaliacao(cromossomo, CONFIGPEN));
+        }
+
+        return notas.sort((a, b) => a - b);
+    }
 
     geraPopulacao(100);
     avaliaCromossomo();
 
-    console.log(notas);
+    console.table(populacao);
+    console.table(notas);
 });
